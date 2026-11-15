@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0f1c">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; media-src https: blob:; connect-src 'self' https://jthypvjeglwnugovfkhp.supabase.co https://VOTRE-BACKEND.example.com; base-uri 'self'; form-action 'self'">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20fill%3D%22%230b1220%22/%3E%3Ctext%20x%3D%22256%22%20y%3D%22330%22%20font-size%3D%22280%22%20text-anchor%3D%22middle%22%20fill%3D%22%233b82f6%22%20font-family%3D%22sans-serif%22%20font-weight%3D%22700%22%3ER%3C/text%3E%3C/svg%3E">
+<title>RUNNERAPPS</title>
+<style>
+:root{
+--bg:#0a0f1c;--bg-grad-1:#101a30;--bg-grad-2:#080d18;--bg-glow:rgba(59,130,246,0.14);
+--card:#131c30;--card-hover:#18233d;--input-bg:#0b1220;
+--tx:#e8edf7;--mut:#93a3c0;--ac:#3b82f6;--ac-hi:#60a5fa;--ac-glow:rgba(59,130,246,0.35);
+--ok:#22c55e;--er:#f87171;--warn:#f59e0b;--bd:rgba(255,255,255,0.08);--bd-strong:rgba(255,255,255,0.16);
+--shadow:0 12px 34px -16px rgba(0,0,0,0.65);--radius:16px;--radius-sm:12px;
+}
+@media (prefers-color-scheme:light){
+:root{
+--bg:#eef2f9;--bg-grad-1:#f8fafd;--bg-grad-2:#e9eef7;--bg-glow:rgba(37,99,235,0.10);
+--card:#ffffff;--card-hover:#f6f9fd;--input-bg:#f1f5fb;
+--tx:#0f172a;--mut:#55627d;--ac:#2563eb;--ac-hi:#3b82f6;--ac-glow:rgba(37,99,235,0.22);
+--ok:#16a34a;--er:#dc2626;--warn:#b45309;--bd:rgba(15,23,42,0.10);--bd-strong:rgba(15,23,42,0.20);
+--shadow:0 12px 30px -18px rgba(15,23,42,0.25);
+}
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);-webkit-font-smoothing:antialiased;position:relative}
+body::before{content:"";position:fixed;inset:0;z-index:-1;
+background:radial-gradient(900px 500px at 100% -10%,var(--bg-glow),transparent 60%),radial-gradient(700px 420px at -10% 110%,var(--bg-glow),transparent 55%),linear-gradient(180deg,var(--bg-grad-1),var(--bg-grad-2));pointer-events:none}
+main{max-width:760px;margin:auto;padding:20px 16px 36px}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:4px}
+h1{font-size:1.5rem;margin:6px 0;letter-spacing:.06em;font-weight:800;background:linear-gradient(90deg,var(--tx) 30%,var(--ac-hi));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:1.15rem;margin:14px 0 8px;font-weight:700}
+h3{font-size:1rem;margin:14px 0 6px;font-weight:700;color:var(--ac-hi)}
+.mut{color:var(--mut);font-size:.9rem}
+#sub{margin-bottom:14px}
+#auth,#mfa{background:var(--card);border:1px solid var(--bd);border-radius:var(--radius);padding:18px;margin-top:16px;box-shadow:var(--shadow)}
+#mfa .mut{margin:8px 0}
+input,select,textarea{font:inherit;width:100%;padding:13px 14px;border-radius:var(--radius-sm);border:1px solid var(--bd);background:var(--card);color:var(--tx);margin:6px 0;outline:none;transition:border-color .15s,box-shadow .15s,background .15s}
+#auth input,#mfa input{background:var(--input-bg)}
+input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--ac-glow);background:var(--card)}
+input::placeholder,textarea::placeholder{color:var(--mut);opacity:.9}
+button{font:inherit;width:100%;padding:13px 16px;border-radius:var(--radius-sm);border:1px solid var(--bd);background:var(--card);color:var(--tx);margin:6px 0;cursor:pointer;transition:transform .12s,background .15s,border-color .15s,box-shadow .15s,filter .15s}
+button:active{transform:scale(.98)}
+button.btn{background:linear-gradient(180deg,var(--ac-hi),var(--ac));color:#fff;border:0;font-weight:700;box-shadow:0 10px 24px -10px var(--ac-glow)}
+button.btn:hover{filter:brightness(1.06)}
+button.alt{background:transparent;border:1.5px solid var(--ac);color:var(--ac);font-weight:600}
+button.alt:hover{background:var(--ac-glow)}
+button.danger{background:transparent;color:var(--er);border:1.5px solid var(--er);font-weight:600}
+button.danger:hover{background:var(--er);color:#fff}
+button.lnk{background:none;border:0;color:var(--mut);text-decoration:underline;width:auto;padding:6px;cursor:pointer;margin:6px auto;display:block}
+button:disabled{opacity:.55;cursor:not-allowed}
+#msg{min-height:1.4em;font-size:.9rem;color:var(--er);margin-top:8px;font-weight:500}
+#msg.ok{color:var(--ok)}
+.hidden{display:none!important}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+@media (min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{position:relative;background:var(--card);border:1px solid var(--bd);border-radius:var(--radius);padding:16px;text-align:left;color:var(--tx);cursor:pointer;display:block;width:100%;overflow:hidden;transition:transform .15s,border-color .15s,background .15s,box-shadow .15s}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(420px 220px at 100% 0%,var(--ac-glow),transparent 70%);opacity:0;transition:opacity .25s;pointer-events:none}
+.card:hover{transform:translateY(-2px);border-color:var(--bd-strong);background:var(--card-hover);box-shadow:var(--shadow)}
+.card:hover::before{opacity:1}
+.card:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.card .ic{font-size:1.7rem;display:block;line-height:1}
+.card b{display:block;margin:10px 0 4px;font-size:.98rem;font-weight:700}
+.card .mut{font-size:.82rem;line-height:1.35;display:block}
+.card.core{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac-glow)}
+#dept>.lnk{display:inline-block;margin:0 0 8px;width:auto}
+.row{display:flex;gap:8px;align-items:stretch}
+.row>input,.row>button{margin:6px 0}
+.row input{flex:1}
+.row button{width:auto;padding-left:18px;padding-right:18px;flex-shrink:0}
+ul{list-style:none;padding:0;margin:8px 0}
+li{display:flex;justify-content:space-between;gap:8px;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:var(--radius-sm);padding:12px 14px;margin:8px 0;word-break:break-word;transition:border-color .15s,background .15s}
+li:hover{border-color:var(--bd-strong);background:var(--card-hover)}
+li button{width:auto;padding:8px 12px;margin:0;background:transparent;color:var(--er);border:1px solid var(--er);border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600;flex-shrink:0}
+li button:hover{background:var(--er);color:#fff}
+#qr{display:flex;justify-content:center;margin:12px 0}
+#qr img{background:#fff;padding:10px;border-radius:12px;display:block}
+code{word-break:break-all;background:var(--input-bg);padding:4px 8px;border-radius:6px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;border:1px solid var(--bd);display:inline-block;margin-top:6px}
+#status{margin-top:10px;font-size:.85rem}
+#enroll{margin-top:12px}
+#install{margin-top:8px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.tab{width:auto;padding:8px 12px;margin:0;font-size:.85rem;border-radius:999px;background:transparent;border:1px solid var(--bd);color:var(--mut)}
+.tab.active{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.result{background:var(--card);border:1px solid var(--bd);border-radius:var(--radius-sm);padding:12px;margin:8px 0;word-break:break-word}
+.result .url{color:var(--ac-hi);font-size:.85rem}
+.result .title{font-weight:700;margin:4px 0}
+.result .meta{font-size:.75rem;color:var(--mut)}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.7rem;font-weight:700;letter-spacing:.03em}
+.badge-pending{background:rgba(245,158,11,.15);color:var(--warn);border:1px solid var(--warn)}
+.badge-approved{background:rgba(34,197,94,.15);color:var(--ok);border:1px solid var(--ok)}
+.badge-rejected{background:rgba(248,113,113,.15);color:var(--er);border:1px solid var(--er)}
+.empty{text-align:center;color:var(--mut);padding:16px;font-size:.9rem}
+.audio{width:100%;margin-top:8px;border-radius:8px}
+video.audio{max-height:280px;background:#000}
+@media (max-width:400px){
+main{padding:16px 12px 28px}
+.grid{gap:10px}
+.card{padding:14px}
+.card .ic{font-size:1.5rem}
+.card b{font-size:.9rem}
+.card .mut{font-size:.78rem}
+#auth,#mfa{padding:16px}
+}
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>RUNNERAPPS</h1>
+<button class="lnk hidden" id="out">Se déconnecter</button>
+</header>
+<div class="mut" id="sub">Un compte. Huit départements.</div>
+<div id="msg" role="alert" aria-live="polite"></div>
+
+<section id="auth">
+<input id="email" type="email" placeholder="Email" autocomplete="email">
+<input id="pw" type="password" placeholder="Mot de passe (12 caractères minimum)" autocomplete="current-password">
+<button class="btn" id="in">Se connecter</button>
+<button class="alt" id="up">Créer un compte</button>
+<button class="lnk" id="reset">Mot de passe oublié</button>
+</section>
+
+<section id="mfa" class="hidden">
+<h2 id="mfaTitle">Double authentification</h2>
+<div id="qr"></div>
+<div class="mut" id="secret"></div>
+<input id="code" inputmode="numeric" autocomplete="one-time-code" placeholder="Code à 6 chiffres" maxlength="6">
+<button class="btn" id="vf">Valider</button>
+<button class="lnk" id="mfaBack">Annuler</button>
+</section>
+
+<section id="home" class="hidden">
+<div class="mut" id="who"></div>
+<div class="grid" id="grid"></div>
+<button class="alt" id="enroll" style="margin-top:16px">Activer la double authentification</button>
+<button class="alt" id="orgOpen" style="margin-top:8px">Publier mon organisation</button>
+<button class="alt" id="subscribeOpen" style="margin-top:8px">💳 Abonnement (9 $ / 30 jours)</button>
+<button class="alt hidden" id="install">Installer l'application</button>
+</section>
+
+<section id="dept" class="hidden">
+<button class="lnk" id="back">← Retour</button>
+<h2 id="dTitle"></h2>
+<div class="mut" id="dDesc"></div>
+<div id="itemsBox">
+<div class="row">
+<input id="newItem" placeholder="Ajouter une note" maxlength="200">
+<button class="btn" id="add">Ajouter</button>
+</div>
+<ul id="items"></ul>
+</div>
+</section>
+
+<section id="orgForm" class="hidden">
+<button class="lnk" id="orgBack">← Retour</button>
+<h2>Publier mon organisation</h2>
+<div class="mut">ONG, association ou fondation. Champs * obligatoires. Site web facultatif.</div>
+<input id="o_name" placeholder="Nom de l'organisation *" maxlength="150">
+<input id="o_ref" placeholder="Numéro d'enregistrement officiel *" maxlength="60">
+<input id="o_location" placeholder="Localisation (pays, ville) *" maxlength="150">
+<input id="o_p1" placeholder="Téléphone 1 format international (ex. +235...) *" maxlength="20" inputmode="tel">
+<input id="o_p2" placeholder="Téléphone 2 format international (ex. +235...) *" maxlength="20" inputmode="tel">
+<input id="o_site" type="url" placeholder="Site web (facultatif)" maxlength="200">
+<textarea id="o_object" rows="3" placeholder="Objet de l'organisation *" maxlength="2000"></textarea>
+<textarea id="o_needs" rows="3" placeholder="Besoins actuels *" maxlength="2000"></textarea>
+<textarea id="o_objectives" rows="3" placeholder="Objectifs *" maxlength="2000"></textarea>
+<button class="btn" id="orgSend">Publier</button>
+</section>
+
+<section id="intelligence" class="hidden">
+<button class="lnk" id="intelBack">← Retour</button>
+<h2>🧠 INTELLIGENCE</h2>
+<div class="tabs" id="intelTabs">
+<button class="tab active" data-tab="search">Recherche</button>
+<button class="tab" data-tab="science">Science</button>
+<button class="tab" data-tab="scrape">Extraction</button>
+<button class="tab" data-tab="translate">Traduction</button>
+<button class="tab" data-tab="voice">Voix</button>
+</div>
+<div id="tab-search" class="tab-panel active">
+<input id="i_objective" placeholder="Objectif de recherche (10 à 2000 car.)">
+<textarea id="i_queries" rows="3" placeholder="Requêtes (une par ligne, 1 à 5)"></textarea>
+<button class="btn" id="i_search">Rechercher</button>
+<div id="i_search_results"></div>
+</div>
+<div id="tab-science" class="tab-panel">
+<input id="i_science_q" placeholder="Sujet scientifique (3 à 300 car.)">
+<button class="btn" id="i_science">Rechercher</button>
+<div id="i_science_results"></div>
+</div>
+<div id="tab-scrape" class="tab-panel">
+<input id="i_scrape_url" type="url" placeholder="URL https à extraire">
+<button class="btn" id="i_scrape">Extraire</button>
+<div id="i_scrape_results"></div>
+</div>
+<div id="tab-translate" class="tab-panel">
+<textarea id="i_tr_text" rows="3" placeholder="Texte à traduire (max 2000 car.)"></textarea>
+<select id="i_tr_lang">
+<option value="fr">Français</option><option value="en">Anglais</option><option value="es">Espagnol</option>
+<option value="pt">Portugais</option><option value="de">Allemand</option><option value="it">Italien</option>
+<option value="nl">Néerlandais</option><option value="ar">Arabe</option><option value="zh">Chinois</option>
+<option value="ja">Japonais</option><option value="ko">Coréen</option><option value="hi">Hindi</option>
+<option value="ru">Russe</option><option value="tr">Turc</option><option value="sw">Swahili</option>
+<option value="id">Indonésien</option><option value="vi">Vietnamien</option><option value="pl">Polonais</option>
+<option value="th">Thaï</option><option value="fa">Persan</option>
+</select>
+<button class="btn" id="i_tr">Traduire</button>
+<div id="i_tr_results"></div>
+</div>
+<div id="tab-voice" class="tab-panel">
+<textarea id="i_voice_text" rows="3" placeholder="Texte à synthétiser (max 1000 car., déjà traduit)"></textarea>
+<input id="i_voice_id" placeholder="Voice ID (facultatif)">
+<button class="btn" id="i_voice">Générer la voix</button>
+<div id="i_voice_results"></div>
+</div>
+</section>
+
+<section id="studio" class="hidden">
+<button class="lnk" id="studioBack">← Retour</button>
+<h2>🎨 STUDIO — Vidéo</h2>
+
+<h3>1. Choisir un style</h3>
+<select id="st_style">
+<option value="pixar">Style Pixar</option>
+<option value="2d">Dessin 2D</option>
+<option value="3d">Dessin animé 3D</option>
+<option value="crayon">Dessin animé crayon</option>
+<option value="anime">Anime japonais</option>
+<option value="realistic">Réalisme humain 3D</option>
+<option value="advertising">Publicitaire</option>
+<option value="education">Formation et enseignement</option>
+</select>
+
+<h3>2. Décrire la vidéo</h3>
+<textarea id="st_prompt" rows="2" maxlength="500" placeholder="Ex. : un lion qui traverse la savane au coucher du soleil"></textarea>
+
+<h3>3. Chercher des vidéos stock (gratuit)</h3>
+<button class="btn" id="st_search">🔍 Chercher</button>
+
+<h3>4. Générer avec l'IA</h3>
+<div class="mut" id="st_gen_status">Vérification…</div>
+<button class="btn" id="st_generate" disabled>✨ Générer (IA)</button>
+
+<div id="st_results"></div>
+
+<h3>Historique</h3>
+<div id="st_history" class="mut">Chargement…</div>
+</section>
+
+<section id="core" class="hidden">
+<button class="lnk" id="coreBack">← Retour</button>
+<h2>🔒 CORE — Espace fondateur</h2>
+<h3>Fiches ONG en attente</h3>
+<div id="coreOrgs" class="mut">Chargement…</div>
+<h3>Paiements en attente</h3>
+<div id="corePayments" class="mut">Chargement…</div>
+</section>
+
+<section id="opps" class="hidden">
+<button class="lnk" id="oppsBack">← Retour</button>
+<h2>📢 OPPORTUNITÉS</h2>
+<button class="alt" id="oppsPublish">Publier mon organisation</button>
+<h3>Organisations vérifiées</h3>
+<div id="oppsList" class="mut">Chargement…</div>
+</section>
+
+<section id="subscribe" class="hidden">
+<button class="lnk" id="subBack">← Retour</button>
+<h2>💳 Abonnement</h2>
+<div id="subInfo" class="mut">Chargement…</div>
+<h3>Moyen de paiement</h3>
+<select id="subMethod">
+<option value="paypal">PayPal</option>
+<option value="airtel">Airtel Money</option>
+<option value="moov">Moov Money</option>
+<option value="redotpay">RedotPay</option>
+<option value="uba">UBA</option>
+</select>
+<input id="subPeriods" type="number" min="1" max="12" value="1" placeholder="Nombre de périodes (30 jours chacune)">
+<div id="subAmount" class="mut" style="margin:8px 0"></div>
+<button class="btn" id="subInitiate">Initier le paiement</button>
+<div id="subPaymentInfo"></div>
+</section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const SB_URL='https://jthypvjeglwnugovfkhp.supabase.co';
+const SB_KEY='sb_publishable_IZADAV8sXuwoeoqY6HqkKA_epgTHNBP';
+const API_URL='https://VOTRE-BACKEND.example.com';
+const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+const $=id=>document.getElementById(id);
+const VIEWS=['auth','mfa','home','dept','orgForm','intelligence','studio','core','opps','subscribe'];
+const show=v=>{VIEWS.forEach(s=>$(s).classList.toggle('hidden',s!==v));$('out').classList.toggle('hidden',v==='auth')};
+const say=(m,ok)=>{const e=$('msg');e.textContent=m||'';e.classList.toggle('ok',!!ok)};
+
+const META={
+RUNNER_BUSINESS:{ic:'💼',d:'Activités commerciales.'},
+RUNNER_CONNECT:{ic:'🌍',d:'Échanges intercontinentaux.'},
+RUNNER_WORK:{ic:'🛠️',d:'Productivité.'},
+RUNNER_LEARN:{ic:'🎓',d:'Apprentissage.'},
+RUNNER_TRUST:{ic:'🛡️',d:'Sécurité et confiance.'},
+RUNNER_PAY:{ic:'💳',d:'Paiements et abonnement.'},
+RUNNER_STUDIO:{ic:'🎨',d:'Vidéo, images et documents.'},
+RUNNER_INSIGHTS:{ic:'📊',d:'Analyses et tableaux de bord.'},
+RUNNER_OPPORTUNITIES:{ic:'📢',d:'ONG, emploi, sport, humanitaire.'},
+RUNNER_INTELLIGENCE:{ic:'🧠',d:'Recherche, science, traduction, voix.'},
+RUNNER_CORE:{ic:'🔒',d:'Contrôle central (fondateur).'}
+};
+const ORDER=['RUNNER_BUSINESS','RUNNER_CONNECT','RUNNER_WORK','RUNNER_LEARN','RUNNER_TRUST','RUNNER_PAY','RUNNER_STUDIO','RUNNER_INSIGHTS','RUNNER_OPPORTUNITIES','RUNNER_INTELLIGENCE','RUNNER_CORE'];
+
+const FR_ERR=[
+[/invalid login/i,'Email ou mot de passe incorrect.'],
+[/email not confirmed/i,'Email non confirmé. Vérifiez votre boîte.'],
+[/already registered|already been registered/i,'Un compte existe déjà avec cet email.'],
+[/rate limit|too many/i,'Trop de tentatives. Patientez.'],
+[/invalid.*(totp|code)|code.*invalid/i,'Code incorrect ou expiré.'],
+[/network|failed to fetch/i,'Connexion impossible.']
+];
+const fr=m=>{const t=(m&&m.message)||String(m||'');for(const[r,s]of FR_ERR)if(r.test(t))return s;return t||'Une erreur est survenue.'};
+
+let factorId=null, user=null, isFounder=false, current=null;
+
+async function api(path,opts={}){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){await sb.auth.signOut();route();throw new Error('Session expirée.');}
+  const r=await fetch(API_URL+path,{
+    ...opts,
+    headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.access_token,...(opts.headers||{})}
+  });
+  if(r.status===401){await sb.auth.signOut();route();throw new Error('Session expirée.');}
+  const j=await r.json().catch(()=>({}));
+  if(r.status===402)throw new Error('Abonnement requis. Cliquez sur 💳 Abonnement.');
+  if(!r.ok)throw new Error(typeof j.detail==='string'?j.detail:'Erreur '+r.status);
+  return j;
+}
+
+async function route(){
+  say('');
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){user=null;show('auth');return}
+  user=session.user;
+  try{await api('/api/core/status');isFounder=true;}catch(e){isFounder=false;}
+  const {data:aal}=await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+  const {data:fl}=await sb.auth.mfa.listFactors();
+  const verified=(fl&&fl.totp||[]).filter(f=>f.status==='verified');
+  if(verified.length&&aal&&aal.currentLevel!=='aal2'){
+    factorId=verified[0].id;
+    $('qr').replaceChildren();$('code').value='';
+    show('mfa');return;
+  }
+  await loadHome(verified.length>0);
+}
+
+async function loadHome(hasMfa){
+  $('enroll').classList.toggle('hidden',hasMfa);
+  let subText='non abonné';
+  try{
+    const s=await api('/api/subscription/status');
+    if(s.active)subText='abonné jusqu\'au '+new Date(s.ends_at).toLocaleDateString('fr-FR');
+  }catch(e){}
+  $('who').textContent=`${user.email||'?'} · ${hasMfa?'🔒 2FA':'⚠️ 2FA désactivée'} · ${isFounder?'👑 Fondateur':'Utilisateur'} · ${subText}`;
+  const grid=$('grid');grid.replaceChildren();
+  ORDER.filter(c=>c!=='RUNNER_CORE'||isFounder).forEach(c=>{
+    const meta=META[c];if(!meta)return;
+    const b=document.createElement('button');
+    b.className='card'+((c==='RUNNER_CORE'||c==='RUNNER_INTELLIGENCE')?' core':'');
+    const ic=document.createElement('span');ic.className='ic';ic.textContent=meta.ic;
+    const t=document.createElement('b');t.textContent=c.replace('RUNNER_','RUNNER ');
+    const d=document.createElement('span');d.className='mut';d.textContent=meta.d;
+    b.append(ic,t,d);
+    b.onclick=()=>openDept(c);
+    grid.append(b);
+  });
+  show('home');
+}
+
+async function openDept(code){
+  current=code;
+  const meta=META[code]||{};
+  $('dTitle').textContent=code.replace('RUNNER_','RUNNER ');
+  $('dDesc').textContent=meta.d||'';
+  if(code==='RUNNER_INTELLIGENCE'){show('intelligence');return}
+  if(code==='RUNNER_STUDIO'){show('studio');initStudio();return}
+  if(code==='RUNNER_CORE'){show('core');loadCore();return}
+  if(code==='RUNNER_OPPORTUNITIES'){show('opps');loadOpps();return}
+  show('dept');say('');await loadItems();
+}
+
+async function loadItems(){
+  try{
+    const {data,error}=await sb.from('department_items').select('id,title,created_at').eq('module_code',current).order('created_at',{ascending:false}).limit(100);
+    if(error)throw error;
+    const ul=$('items');ul.replaceChildren();
+    if(!data.length){
+      const li=document.createElement('li');li.textContent='Aucun élément.';
+      li.style.color='var(--mut)';ul.append(li);return;
+    }
+    data.forEach(it=>{
+      const li=document.createElement('li'),s=document.createElement('span');
+      s.textContent=it.title;
+      const x=document.createElement('button');x.textContent='Supprimer';
+      x.onclick=async()=>{const {error:e}=await sb.from('department_items').delete().eq('id',it.id);e?say(fr(e)):loadItems();};
+      li.append(s,x);ul.append(li);
+    });
+  }catch(e){say(fr(e))}
+}
+
+$('add').onclick=async()=>{
+  const title=$('newItem').value.trim();
+  if(!title)return say('Saisissez un texte.');
+  $('add').disabled=true;
+  const {error}=await sb.from('department_items').insert({module_code:current,owner_user_id:user.id,kind:'note',title});
+  $('add').disabled=false;
+  if(error)return say(fr(error));
+  $('newItem').value='';say('');loadItems();
+};
+$('back').onclick=()=>{say('');show('home')};
+
+/* AUTH */
+const creds=()=>({email:$('email').value.trim(),password:$('pw').value});
+$('in').onclick=async()=>{
+  const c=creds();
+  if(!c.email||!c.password)return say('Saisissez email et mot de passe.');
+  $('in').disabled=true;
+  const {error}=await sb.auth.signInWithPassword(c);
+  $('in').disabled=false;
+  error?say(fr(error)):route();
+};
+$('up').onclick=async()=>{
+  const c=creds();
+  if(!c.email)return say('Saisissez votre email.');
+  if(c.password.length<12)return say('Mot de passe : 12 caractères minimum.');
+  const {data,error}=await sb.auth.signUp({email:c.email,password:c.password});
+  if(error)return say(fr(error));
+  if(data.session)route();
+  else say('Compte créé. Vérifiez votre email pour confirmer.',true);
+};
+$('reset').onclick=async()=>{
+  const email=$('email').value.trim();
+  if(!email)return say("Saisissez d'abord votre email.");
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
+  error?say(fr(error)):say('Email de réinitialisation envoyé (si le compte existe).',true);
+};
+$('out').onclick=async()=>{await sb.auth.signOut();$('pw').value='';route()};
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!$('auth').classList.contains('hidden'))$('in').click();
+});
+
+/* 2FA */
+$('enroll').onclick=async()=>{
+  const {data,error}=await sb.auth.mfa.enroll({factorType:'totp',friendlyName:'RUNNERAPPS'});
+  if(error)return say(fr(error));
+  factorId=data.id;
+  $('mfaTitle').textContent='Activer la double authentification';
+  const img=document.createElement('img');
+  img.src=data.totp.qr_code;img.width=200;img.height=200;img.alt='QR code 2FA';
+  $('qr').replaceChildren(img);
+  const c=document.createElement('code');c.textContent=data.totp.secret;
+  $('secret').replaceChildren(document.createTextNode('Scannez le QR code ou saisissez cette clé : '),c);
+  $('code').value='';show('mfa');
+};
+$('vf').onclick=async()=>{
+  const code=$('code').value.trim();
+  if(!/^\d{6}$/.test(code))return say('Code à 6 chiffres requis.');
+  $('vf').disabled=true;
+  const {data:ch,error:e1}=await sb.auth.mfa.challenge({factorId});
+  if(e1){$('vf').disabled=false;return say(fr(e1))}
+  const {error:e2}=await sb.auth.mfa.verify({factorId,challengeId:ch.id,code});
+  $('vf').disabled=false;
+  if(e2)return say(fr(e2));
+  say('2FA validée.',true);route();
+};
+$('mfaBack').onclick=()=>route();
+
+/* PWA */
+let deferred=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;$('install').classList.remove('hidden')});
+$('install').onclick=async()=>{if(!deferred)return;deferred.prompt();await deferred.userChoice;deferred=null;$('install').classList.add('hidden');};
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY')say('Reconnectez-vous puis changez votre mot de passe.',true)});
+
+/* ONG */
+$('orgOpen').onclick=()=>{say('');show('orgForm')};
+$('orgBack').onclick=()=>{say('');show('home')};
+$('orgSend').onclick=async()=>{
+  const v=id=>$(id).value.trim();
+  const body={name:v('o_name'),object:v('o_object'),needs:v('o_needs'),objectives:v('o_objectives'),location:v('o_location'),phone_1:v('o_p1'),phone_2:v('o_p2'),registration_ref:v('o_ref')};
+  const requis=['name','object','needs','objectives','location','phone_1','phone_2','registration_ref'];
+  if(requis.some(k=>!body[k]))return say('Remplissez tous les champs marqués *.');
+  const site=v('o_site');if(site)body.website=site;
+  $('orgSend').disabled=true;
+  try{
+    await api('/api/opportunities/orgs',{method:'POST',body:JSON.stringify(body)});
+    api('/api/notify/listing-received',{method:'POST'}).catch(()=>{});
+    ['o_name','o_ref','o_location','o_p1','o_p2','o_site','o_object','o_needs','o_objectives'].forEach(id=>$(id).value='');
+    say('Fiche envoyée. Publication après vérification.',true);
+    show('home');
+  }catch(e){say(e.message)}
+  finally{$('orgSend').disabled=false}
+};
+
+/* INTELLIGENCE */
+$('intelBack').onclick=()=>{say('');show('home')};
+document.querySelectorAll('#intelTabs .tab').forEach(t=>{
+  t.onclick=()=>{
+    document.querySelectorAll('#intelTabs .tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('#intelligence .tab-panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    $('tab-'+t.dataset.tab).classList.add('active');
+  };
+});
+$('i_search').onclick=async()=>{
+  const objective=$('i_objective').value.trim();
+  const queries=$('i_queries').value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,5);
+  if(objective.length<10)return say('Objectif : min 10 caractères.');
+  if(!queries.length)return say('Ajoutez au moins une requête.');
+  $('i_search').disabled=true;$('i_search_results').innerHTML='<div class="empty">Recherche…</div>';
+  try{
+    const j=await api('/api/insights/search',{method:'POST',body:JSON.stringify({objective,queries})});
+    const div=$('i_search_results');div.replaceChildren();
+    (j.results||[]).forEach(r=>{
+      const el=document.createElement('div');el.className='result';
+      el.innerHTML=`<div class="url">${r.url||''}</div><div class="title">${r.title||''}</div><div class="meta">${r.publish_date||''}</div><div>${(r.excerpts||[]).join(' ')}</div>`;
+      div.append(el);
+    });
+    if(!j.results||!j.results.length)div.innerHTML='<div class="empty">Aucun résultat.</div>';
+    say('');
+  }catch(e){say(e.message)}
+  finally{$('i_search').disabled=false}
+};
+$('i_science').onclick=async()=>{
+  const query=$('i_science_q').value.trim();
+  if(query.length<3)return say('Sujet trop court.');
+  $('i_science').disabled=true;$('i_science_results').innerHTML='<div class="empty">Recherche…</div>';
+  try{
+    const j=await api('/api/insights/science',{method:'POST',body:JSON.stringify({query})});
+    $('i_science_results').innerHTML=`<pre style="white-space:pre-wrap;background:var(--input-bg);padding:12px;border-radius:8px;font-size:.8rem;overflow:auto;max-height:400px">${JSON.stringify(j.data,null,2)}</pre>`;
+    say('');
+  }catch(e){say(e.message)}
+  finally{$('i_science').disabled=false}
+};
+$('i_scrape').onclick=async()=>{
+  const url=$('i_scrape_url').value.trim();
+  if(!/^https:\/\//.test(url))return say('URL https requise.');
+  $('i_scrape').disabled=true;$('i_scrape_results').innerHTML='<div class="empty">Extraction…</div>';
+  try{
+    const j=await api('/api/insights/scrape',{method:'POST',body:JSON.stringify({url})});
+    $('i_scrape_results').innerHTML=`<div class="result"><div class="title">${j.title||''}</div><div class="meta">${j.url||''}</div><pre style="white-space:pre-wrap;font-size:.8rem;margin-top:8px;max-height:400px;overflow:auto">${(j.markdown||'').slice(0,5000)}</pre></div>`;
+    say('');
+  }catch(e){say(e.message)}
+  finally{$('i_scrape').disabled=false}
+};
+$('i_tr').onclick=async()=>{
+  const text=$('i_tr_text').value.trim();
+  if(!text)return say('Texte vide.');
+  $('i_tr').disabled=true;
+  try{
+    const j=await api('/api/translate',{method:'POST',body:JSON.stringify({text,target:$('i_tr_lang').value})});
+    $('i_tr_results').innerHTML=`<div class="result">${j.text||''}</div>`;
+    $('i_voice_text').value=j.text||'';
+    say('');
+  }catch(e){say(e.message)}
+  finally{$('i_tr').disabled=false}
+};
+$('i_voice').onclick=async()=>{
+  const text=$('i_voice_text').value.trim();
+  if(!text)return say('Texte vide.');
+  if(text.length>1000)return say('Texte > 1000 caractères : découpez-le.');
+  $('i_voice').disabled=true;
+  try{
+    const {data:{session}}=await sb.auth.getSession();
+    const body={text};const vid=$('i_voice_id').value.trim();if(vid)body.voice_id=vid;
+    const r=await fetch(API_URL+'/api/voice/speak',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.access_token},body:JSON.stringify(body)});
+    if(!r.ok)throw new Error('Erreur voix');
+    const blob=await r.blob();
+    $('i_voice_results').innerHTML=`<audio class="audio" controls src="${URL.createObjectURL(blob)}"></audio>`;
+    say('');
+  }catch(e){say(e.message)}
+  finally{$('i_voice').disabled=false}
+};
+
+/* STUDIO */
+$('studioBack').onclick=()=>{say('');show('home')};
+async function initStudio(){
+  $('st_results').replaceChildren();
+  $('st_history').textContent='Chargement…';
+  try{
+    const s=await api('/api/studio/video/styles');
+    if(s.generation_available){
+      $('st_gen_status').innerHTML='<span style="color:var(--ok)">✅ Génération IA disponible ('+s.generation_providers.join(', ')+')</span>';
+      $('st_generate').disabled=false;
+    }else{
+      $('st_gen_status').innerHTML='<span style="color:var(--warn)">⚠️ Génération IA non configurée. Ajoutez une clé Runway/Kling/Pika/Luma dans Render.</span>';
+      $('st_generate').disabled=true;
+    }
+    if(!s.stock_search_available){
+      $('st_search').disabled=true;
+      $('st_search').textContent='🔍 Recherche stock indisponible (clé Pixabay absente)';
+    }else{
+      $('st_search').disabled=false;
+      $('st_search').textContent='🔍 Chercher';
+    }
+  }catch(e){say(e.message)}
+  try{
+    const h=await api('/api/studio/video/history');
+    const div=$('st_history');div.replaceChildren();
+    if(!h.items||!h.items.length){div.innerHTML='<div class="empty">Aucun historique.</div>';return}
+    h.items.forEach(v=>{
+      const el=document.createElement('div');el.className='result';
+      const badge=v.status==='ready'?'badge-approved':'badge-pending';
+      el.innerHTML=`
+        <div class="title">${v.style} <span class="badge ${badge}">${v.status}</span></div>
+        <div class="meta">${v.prompt}</div>
+        <div class="meta">${v.kind} · ${v.provider||'—'} · ${new Date(v.created_at).toLocaleString('fr-FR')}</div>
+        ${v.result_url?`<a href="${v.result_url}" target="_blank" rel="noopener" style="color:var(--ac-hi);font-size:.85rem">Voir le résultat</a>`:''}`;
+      div.append(el);
+    });
+  }catch(e){$('st_history').textContent=e.message}
+}
+$('st_search').onclick=async()=>{
+  const style=$('st_style').value;
+  const prompt=$('st_prompt').value.trim();
+  if(prompt.length<3)return say('Décrivez la vidéo (3 car. min.).');
+  $('st_search').disabled=true;
+  $('st_results').innerHTML='<div class="empty">Recherche…</div>';
+  try{
+    const r=await api('/api/studio/video/search',{method:'POST',body:JSON.stringify({style,prompt})});
+    const div=$('st_results');div.replaceChildren();
+    if(!r.results.length){div.innerHTML='<div class="empty">Aucune vidéo trouvée.</div>';return}
+    r.results.forEach(v=>{
+      const el=document.createElement('div');el.className='result';
+      el.innerHTML=`
+        <div class="title">${v.tags||'Vidéo'}</div>
+        <div class="meta">${v.duration}s · ${v.width}×${v.height} · par ${v.user||'—'}</div>
+        ${v.video_url?`<video class="audio" controls preload="metadata" src="${v.video_url}"></video>`:''}
+        ${v.page_url?`<a href="${v.page_url}" target="_blank" rel="noopener" style="color:var(--ac-hi);font-size:.85rem;display:inline-block;margin-top:6px">Source Pixabay</a>`:''}`;
+      div.append(el);
+    });
+    say('');
+  }catch(e){say(e.message)}
+  finally{$('st_search').disabled=false}
+};
+$('st_generate').onclick=async()=>{
+  const style=$('st_style').value;
+  const prompt=$('st_prompt').value.trim();
+  if(prompt.length<3)return say('Décrivez la vidéo.');
+  $('st_generate').disabled=true;
+  try{
+    await api('/api/studio/video/generate',{method:'POST',body:JSON.stringify({style,prompt,duration_seconds:5})});
+    say('Génération lancée.',true);
+    initStudio();
+  }catch(e){say(e.message)}
+  finally{$('st_generate').disabled=false}
+};
+
+/* CORE */
+$('coreBack').onclick=()=>{say('');show('home')};
+async function loadCore(){
+  $('coreOrgs').textContent='Chargement…';
+  $('corePayments').textContent='Chargement…';
+  try{
+    const j=await api('/api/opportunities/orgs/pending');
+    const div=$('coreOrgs');div.replaceChildren();
+    if(!j.items||!j.items.length){div.innerHTML='<div class="empty">Aucune fiche en attente.</div>'}
+    else j.items.forEach(o=>{
+      const el=document.createElement('div');el.className='result';
+      el.innerHTML=`<div class="title">${o.name}</div>
+        <div class="meta">📍 ${o.location||''} · 📞 ${o.phone_1||''} · Réf. ${o.registration_ref||''}</div>
+        <div style="margin:6px 0;font-size:.85rem">Objet : ${o.object||''}</div>
+        <button class="btn" style="width:auto;padding:8px 14px">Approuver</button>`;
+      el.querySelector('button').onclick=async()=>{
+        try{await api(`/api/opportunities/orgs/${o.id}/approve`,{method:'POST'});say('Fiche approuvée.',true);loadCore();}
+        catch(e){say(e.message)}
+      };
+      div.append(el);
+    });
+  }catch(e){$('coreOrgs').textContent=e.message}
+  try{
+    const j=await api('/api/payment/pending');
+    const div=$('corePayments');div.replaceChildren();
+    if(!j.items||!j.items.length){div.innerHTML='<div class="empty">Aucun paiement en attente.</div>'}
+    else j.items.forEach(p=>{
+      const el=document.createElement('div');el.className='result';
+      el.innerHTML=`
+        <div class="title">${p.amount_usd} $ / ${p.amount_xaf} FCFA · ${p.days} jours</div>
+        <div class="meta">Méthode : ${p.payment_method} · Réf : ${p.proof_reference||'—'}</div>
+        <div style="margin:6px 0;font-size:.75rem">Utilisateur : ${p.user_id}</div>
+        <button class="btn" data-action="ai" style="width:auto;padding:8px 14px;margin-right:6px">🤖 Analyser</button>
+        <button class="btn" data-action="verify" style="width:auto;padding:8px 14px;margin-right:6px">Vérifier</button>
+        <button class="danger" data-action="reject" style="width:auto;padding:8px 14px">Rejeter</button>
+        <div class="ai-result" style="margin-top:8px"></div>`;
+      const [bA,bV,bR]=el.querySelectorAll('button');
+      const aiResult=el.querySelector('.ai-result');
+      bA.onclick=async()=>{
+        bA.disabled=true;aiResult.innerHTML='<div class="empty">Analyse IA…</div>';
+        try{
+          const r=await api('/api/payment/analyze/'+p.id,{method:'POST'});
+          const a=r.analysis;
+          const color=a.verdict==='likely_valid'?'var(--ok)':a.verdict==='invalid'?'var(--er)':'var(--warn)';
+          aiResult.innerHTML=`
+            <div class="result" style="border-color:${color}">
+              <div><b>Score :</b> ${a.score}/100 · <span style="color:${color}"><b>${a.verdict}</b></span></div>
+              <div><b>Recommandation :</b> ${a.recommendation}</div>
+              <ul style="margin:6px 0 0 18px;font-size:.85rem">${a.reasons.map(x=>'<li>'+x+'</li>').join('')}</ul>
+              <div class="meta" style="margin-top:6px">⚠️ Avis IA. Décision finale humaine.</div>
+            </div>`;
+        }catch(e){aiResult.innerHTML='<div class="empty" style="color:var(--er)">'+e.message+'</div>';}
+        finally{bA.disabled=false}
+      };
+      bV.onclick=async()=>{
+        try{await api('/api/payment/verify',{method:'POST',body:JSON.stringify({request_id:p.id})});say('Paiement vérifié.',true);loadCore();}
+        catch(e){say(e.message)}
+      };
+      bR.onclick=async()=>{
+        const reason=prompt('Motif du rejet :');if(!reason)return;
+        try{await api('/api/payment/reject',{method:'POST',body:JSON.stringify({request_id:p.id,reason})});say('Paiement rejeté.',true);loadCore();}
+        catch(e){say(e.message)}
+      };
+      div.append(el);
+    });
+  }catch(e){$('corePayments').textContent=e.message}
+}
+
+/* OPPORTUNITÉS */
+$('oppsBack').onclick=()=>{say('');show('home')};
+$('oppsPublish').onclick=()=>{say('');show('orgForm')};
+async function loadOpps(){
+  try{
+    const j=await api('/api/opportunities/orgs');
+    const div=$('oppsList');div.replaceChildren();
+    if(!j.items||!j.items.length){div.innerHTML='<div class="empty">Aucune organisation vérifiée.</div>';return}
+    j.items.forEach(o=>{
+      const el=document.createElement('div');el.className='result';
+      el.innerHTML=`<div class="title">${o.name} <span class="badge badge-approved">Vérifiée</span></div>
+        <div class="meta">📍 ${o.location||''}</div>
+        <div style="margin:6px 0;font-size:.85rem"><b>Objet :</b> ${o.object||''}</div>
+        <div style="margin:6px 0;font-size:.85rem"><b>Besoins :</b> ${o.needs||''}</div>
+        <div style="margin:6px 0;font-size:.85rem"><b>Objectifs :</b> ${o.objectives||''}</div>
+        <div class="meta">📞 ${o.phone_1||''} · ${o.phone_2||''}${o.website?' · 🌐 '+o.website:''}</div>`;
+      div.append(el);
+    });
+  }catch(e){$('oppsList').textContent=e.message}
+}
+
+/* ABONNEMENT */
+$('subscribeOpen').onclick=()=>{say('');show('subscribe');loadSubscribe()};
+$('subBack').onclick=()=>{say('');show('home')};
+$('subPeriods').oninput=updateSubAmount;
+function updateSubAmount(){
+  const n=parseInt($('subPeriods').value||'1',10)||1;
+  const usd=(9*n).toFixed(2), xaf=(5220*n).toLocaleString('fr-FR');
+  $('subAmount').textContent=`Total : ${usd} $ = ${xaf} FCFA (${30*n} jours)`;
+}
+async function loadSubscribe(){
+  updateSubAmount();
+  $('subInfo').textContent='Chargement…';
+  try{
+    const [p,m,s]=await Promise.all([api('/api/pricing'),api('/api/payment/methods'),api('/api/subscription/status')]);
+    $('subInfo').innerHTML=`Prix : <b>${p.price_usd} $</b> = <b>${p.price_xaf} FCFA</b> pour ${p.days} jours.<br>
+      Statut : ${s.active?`<span class="badge badge-approved">Actif jusqu'au ${new Date(s.ends_at).toLocaleDateString('fr-FR')}</span>`:'<span class="badge badge-pending">Non abonné</span>'}`;
+    $('subMethod').innerHTML=`
+      <option value="paypal">PayPal${m.paypal_url?' — '+m.paypal_url:''}</option>
+      <option value="airtel">Airtel Money${m.airtel_number?' — '+m.airtel_number:''}</option>
+      <option value="moov">Moov Money${m.moov_number?' — '+m.moov_number:''}</option>
+      <option value="redotpay">RedotPay${m.redotpay_uid?' — UID '+m.redotpay_uid:''}</option>
+      <option value="uba">UBA${m.uba_account?' — '+m.uba_account:''}</option>`;
+  }catch(e){$('subInfo').textContent=e.message}
+}
+$('subInitiate').onclick=async()=>{
+  const periods=parseInt($('subPeriods').value||'1',10)||1;
+  const method=$('subMethod').value;
+  $('subInitiate').disabled=true;
+  try{
+    const j=await api('/api/payment/initiate',{method:'POST',body:JSON.stringify({periods,method})});
+    const req=j.request;
+    $('subPaymentInfo').innerHTML=`
+      <div class="result">
+        <div class="title">Demande créée</div>
+        <div class="meta">Montant : ${req.amount_usd} $ = ${req.amount_xaf} FCFA · ${req.days} jours</div>
+        <div style="margin:8px 0;font-size:.85rem">
+          1. Envoyez le montant via <b>${method}</b>.<br>
+          2. Saisissez la référence de transaction ci-dessous.
+        </div>
+        <input id="subProof" placeholder="Référence de la transaction">
+        <button class="btn" id="subProofSend">Envoyer la preuve</button>
+      </div>`;
+    $('subProofSend').onclick=async()=>{
+      const ref=$('subProof').value.trim();
+      if(ref.length<4)return say('Référence trop courte.');
+      $('subProofSend').disabled=true;
+      try{
+        await api('/api/payment/proof',{method:'POST',body:JSON.stringify({request_id:req.id,proof_reference:ref})});
+        api('/api/notify/payment-received',{method:'POST'}).catch(()=>{});
+        $('subPaymentInfo').innerHTML='<div class="result">Preuve envoyée. En attente de validation par le fondateur.</div>';
+        say('Preuve envoyée.',true);
+      }catch(e){say(e.message)}
+      finally{$('subProofSend').disabled=false}
+    };
+    say('');
+  }catch(e){say(e.message)}
+  finally{$('subInitiate').disabled=false}
+};
+
+route();
+</script>
+</body>
+  </html>
